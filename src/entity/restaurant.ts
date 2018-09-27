@@ -16,16 +16,16 @@ export class Restaurant {
     @Column()
     email!: string;
 
-    @OneToOne(type => Address)
+    @OneToOne(type => Address, { cascade: true })
     @JoinColumn()
     address!: Address;
 
-    @OneToMany(type => Meal, meal => meal.restaurant)
+    @OneToMany(type => Meal, meal => meal.restaurant, { cascade: true })
     meals!: Meal[];
 
     @OneToMany(type => Rating, rating => rating.restaurant)
     ratings!: Rating[];
 
-    @ManyToOne(type => Customer, customer => customer.restaurant)
+    @ManyToOne(type => Customer, customer => customer.restaurant, { cascade: true })
     owner!: Customer;
 }

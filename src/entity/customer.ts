@@ -27,7 +27,7 @@ export class Customer {
     @OneToMany(type => Restaurant, restaurant => restaurant.owner)
     restaurant?: Restaurant[];
 
-    @OneToOne(type => Address)
+    @OneToOne(type => Address, { cascade: true })
     @JoinColumn()
     address!: Address;
 

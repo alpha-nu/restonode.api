@@ -4,16 +4,23 @@ import { Restaurant } from '../entity/restaurant';
 import { restaurantsProjection } from '../projections/restaurant';
 import { Customer } from '../entity/customer';
 import { Rating } from '../entity/rating';
+import { Meal } from '../entity/meal';
+import { mealsProjection } from '../projections/meal';
 
 export default (
     restaurantRepository: Repository<Restaurant>,
     customerRepository: Repository<Customer>,
     ratingRepository: Repository<Rating>,
+    mealRepository: Repository<Meal>,
 ) =>
     Router()
         .get('/', async (req: Request, res: Response, next: NextFunction) => {
-            const result = restaurantsProjection(await restaurantRepository.find({ relations: ['ratings'] }));
-            res.json({ restaurants: result });
+            const result = await restaurantRepository.find({ relations: ['ratings'] });
+            res.json({ restaurants: restaurantsProjection(result) });
+        })
+        .get('/:id/meals', async (req: Request, res: Response, next: NextFunction) => {
+            const result = await mealRepository.find({ restaurant: { id: req.params.id } });
+            res.json({ meals: mealsProjection(result) });
         })
         .post('/:id/rate', async (req: Request, res: Response, next: NextFunction) => {
             const restaurant = await restaurantRepository.findOne({ id: req.params.id });

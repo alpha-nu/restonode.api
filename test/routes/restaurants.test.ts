@@ -1,27 +1,31 @@
 import request from 'supertest';
 import app from '../../src/app';
-import { mock, when, instance, anything, anyOfClass, reset } from 'ts-mockito';
+import { mock, when, instance, anything, anyOfClass, reset, verify, deepEqual, strictEqual } from 'ts-mockito';
 import { Repository } from 'typeorm';
 import { Restaurant } from '../../src/entity/restaurant';
 import { Rating } from '../../src/entity/rating';
 import { Customer } from '../../src/entity/customer';
+import { Meal } from '../../src/entity/meal';
 
 describe('/restaurants', () => {
 
     const mockRestaurantRepository = mock<Repository<Restaurant>>(Repository);
     const mockCustomerRepository = mock<Repository<Customer>>(Repository);
     const mockRatingRepository = mock<Repository<Rating>>(Repository);
+    const mockMealRepository = mock<Repository<Meal>>(Repository);
 
     const mockedApp = app(
         instance(mockRestaurantRepository),
         instance(mockCustomerRepository),
         instance(mockRatingRepository),
+        instance(mockMealRepository),
     );
 
     afterEach(() => {
         reset(mockRestaurantRepository);
         reset(mockCustomerRepository);
         reset(mockRatingRepository);
+        reset(mockMealRepository);
     });
 
     describe('GET /restaurants', () => {
@@ -51,8 +55,8 @@ describe('/restaurants', () => {
             rating.restaurant = restaurant;
             rating.score = 7;
 
-            when(mockRestaurantRepository.findOne({id: 1})).thenResolve(restaurant);
-            when(mockCustomerRepository.findOne({userName: 'user'})).thenResolve(customer);
+            when(mockRestaurantRepository.findOne({ id: 1 })).thenResolve(restaurant);
+            when(mockCustomerRepository.findOne({ userName: 'user' })).thenResolve(customer);
             when(mockRatingRepository.save(anyOfClass(Rating))).thenResolve(rating);
 
             const result = await request(mockedApp)
@@ -60,7 +64,28 @@ describe('/restaurants', () => {
                 .send({ userName: 'user', rating: 7 });
 
             expect(result.status).toBe(201);
-            expect(result.body).toEqual({restaurant: 'fancy eats', rating: 7});
+            expect(result.body).toEqual({ restaurant: 'fancy eats', rating: 7 });
+        });
+    });
+
+    describe('GET /restaurants/:id/meals', () => {
+        it('returns a list of all meals offered by a restaurant', async () => {
+            const burger = new Meal();
+            burger.name = 'awesome burger';
+            burger.description = 'holy grail of burger-dom';
+            burger.price = 150;
+
+            when(mockMealRepository.find(anything())).thenResolve([burger]);
+            const result = await request(mockedApp).get('/v1/order-management/restaurants/1/meals');
+
+            expect(result.status).toBe(200);
+            expect(result.body).toEqual({
+                meals: [{
+                    name: 'awesome burger',
+                    description: 'holy grail of burger-dom',
+                    price: 150,
+                }],
+            });
         });
     });
 });
