@@ -6,10 +6,16 @@ import http from 'http';
 import app from './app';
 import { createConnection, getRepository } from 'typeorm';
 import { Restaurant } from './entity/restaurant';
+import { Customer } from './entity/customer';
+import { Rating } from './entity/rating';
 
 createConnection().then(async () => {
 
-    const appInstance = app(await getRepository(Restaurant));
+    const appInstance = app(
+        await getRepository(Restaurant),
+        await getRepository(Customer),
+        await getRepository(Rating),
+        );
 
     /**
      * Get port from environment and store in Express.

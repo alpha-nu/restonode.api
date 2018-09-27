@@ -7,7 +7,7 @@
     "database": "restonode",
     "synchronize": true,
     "logging": "all",
-    "dropSchema": true,
+    "dropSchema": false,
     "entities": [
        "src/entity/**/*.ts"
     ],

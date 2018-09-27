@@ -19,6 +19,9 @@ export class Customer {
     lastName!: string;
 
     @Column()
+    phone!: number;
+
+    @Column()
     canCreateRestaurant: boolean = false;
 
     @OneToMany(type => Restaurant, restaurant => restaurant.owner)

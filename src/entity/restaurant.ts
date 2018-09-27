@@ -13,6 +13,9 @@ export class Restaurant {
     @Column()
     name!: string;
 
+    @Column()
+    email!: string;
+
     @OneToOne(type => Address)
     @JoinColumn()
     address!: Address;

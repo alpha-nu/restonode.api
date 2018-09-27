@@ -7,14 +7,5 @@ export class Address {
     id!: number;
 
     @Column()
-    street!: string;
-
-    @Column()
-    city!: string;
-
-    @Column()
-    province!: string;
-
-    @Column('int')
-    zipCode!: number;
+    normalized!: string;
 }
