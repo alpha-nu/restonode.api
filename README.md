@@ -33,7 +33,21 @@ CREATE USER '<USER_NAME>' IDENTIFIED WITH mysql_native_password BY '<PASSWORD>';
 
 Once an empty database is created, the following script can be run to create the schema load the sample data.
 
-```
+```shell
 yarn seed-data
 ```
+## running the app
+First make sure the code compiles and unit test run with no errors.
+```shell
+yarn install
+yarn test-with-coverage
+```
 
+Optionally:
+```shell
+yarn seed-data
+```
+To start the service on the default node port:
+```SHELL
+yarn run
+```
