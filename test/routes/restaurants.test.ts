@@ -32,6 +32,7 @@ describe('/restaurants', () => {
         it('it returns a list of restaurants', async () => {
             const restaurant = new Restaurant();
             restaurant.name = 'Fancy Eats';
+            restaurant.id = 1;
             const rating = new Rating();
             rating.score = 100;
             const anotherRating = new Rating();
@@ -42,7 +43,7 @@ describe('/restaurants', () => {
 
             const result = await request(mockedApp).get('/v1/order-management/restaurants');
 
-            expect(result.body.restaurants[0].score).toEqual(75);
+            expect(result.body.restaurants).toEqual([{score: 75, name: 'Fancy Eats', id: 1}]);
         });
     });
 
@@ -72,6 +73,7 @@ describe('/restaurants', () => {
         it('returns a list of all meals offered by a restaurant', async () => {
             const burger = new Meal();
             burger.name = 'awesome burger';
+            burger.id = 1;
             burger.description = 'holy grail of burger-dom';
             burger.price = 150;
 
@@ -81,6 +83,7 @@ describe('/restaurants', () => {
             expect(result.status).toBe(200);
             expect(result.body).toEqual({
                 meals: [{
+                    id: 1,
                     name: 'awesome burger',
                     description: 'holy grail of burger-dom',
                     price: 150,
