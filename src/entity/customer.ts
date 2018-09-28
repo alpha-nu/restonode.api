@@ -19,7 +19,7 @@ export class Customer {
     lastName!: string;
 
     @Column()
-    phone!: number;
+    phone!: string;
 
     @Column()
     canCreateRestaurant: boolean = false;

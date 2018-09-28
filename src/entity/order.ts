@@ -11,11 +11,11 @@ export class Order {
     @Column('int')
     total!: number;
 
-    @OneToOne(type => Customer)
+    @OneToOne(type => Customer, { nullable: false })
     @JoinColumn()
     customer!: Customer;
 
     @ManyToMany(type => Meal, meal => meal.orders)
-    @JoinTable()
+    @JoinTable({ name: 'order_meals' })
     meals!: Meal[];
 }

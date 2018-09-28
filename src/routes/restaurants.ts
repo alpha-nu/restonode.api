@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction, Router } from 'express';
+import { Request, Response, Router } from 'express';
 import { Repository } from 'typeorm';
 import { Restaurant } from '../entity/restaurant';
 import { restaurantsProjection } from '../projections/restaurant';
@@ -11,18 +11,18 @@ export default (
     restaurantRepository: Repository<Restaurant>,
     customerRepository: Repository<Customer>,
     ratingRepository: Repository<Rating>,
-    mealRepository: Repository<Meal>,
+    mealRepository: Repository<Meal>
 ) =>
     Router()
-        .get('/', async (req: Request, res: Response, next: NextFunction) => {
+        .get('/', async (req: Request, res: Response) => {
             const result = await restaurantRepository.find({ relations: ['ratings'] });
             res.json({ restaurants: restaurantsProjection(result) });
         })
-        .get('/:id/meals', async (req: Request, res: Response, next: NextFunction) => {
+        .get('/:id/meals', async (req: Request, res: Response) => {
             const result = await mealRepository.find({ restaurant: { id: req.params.id } });
             res.json({ meals: mealsProjection(result) });
         })
-        .post('/:id/rate', async (req: Request, res: Response, next: NextFunction) => {
+        .post('/:id/rate', async (req: Request, res: Response) => {
             const restaurant = await restaurantRepository.findOne({ id: req.params.id });
             const customer = await customerRepository.findOne({ userName: req.body.userName });
 

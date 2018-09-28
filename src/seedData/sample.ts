@@ -28,43 +28,43 @@ loadTypeOrmOptions()
         // seed users
         const customer1 = new Customer();
         const address1 = new Address();
-        address1.normalized = 'some correct address1';
+        address1.normalized = 'address of customer 1';
         customer1.address = address1;
         customer1.canCreateRestaurant = false;
-        customer1.userName = 'c1';
-        customer1.firstName = 'first1';
-        customer1.lastName = 'last1';
-        customer1.phone = 1111111111;
+        customer1.userName = 'customer1';
+        customer1.firstName = 'first';
+        customer1.lastName = 'last';
+        customer1.phone = '1111111111';
         await getRepository(Customer).save(customer1);
 
         const customer2 = new Customer();
         const address2 = new Address();
-        address2.normalized = 'some correct address1';
+        address2.normalized = 'address of customer 2';
         customer2.address = address2;
         customer2.canCreateRestaurant = false;
-        customer2.userName = 'c2';
-        customer2.firstName = 'first2';
-        customer2.lastName = 'last2';
-        customer2.phone = 1111111111;
+        customer2.userName = 'customer2';
+        customer2.firstName = 'first';
+        customer2.lastName = 'last';
+        customer2.phone = '2222222222';
         await getRepository(Customer).save(customer2);
 
         // seed restaurants
         const address3 = new Address();
-        address3.normalized = 'address of restaurant 1';
+        address3.normalized = 'address of owner 1';
         const owner1 = new Customer();
         owner1.address = address3;
         owner1.canCreateRestaurant = true;
-        owner1.userName = 'c2';
-        owner1.firstName = 'first2';
-        owner1.lastName = 'last2';
-        owner1.phone = 1111111111;
+        owner1.userName = 'owner1';
+        owner1.firstName = 'first';
+        owner1.lastName = 'last';
+        owner1.phone = '3333333333';
         await getRepository(Customer).save(owner1);
 
         const restaurant1 = new Restaurant();
         const address4 = new Address();
         address4.normalized = 'address of restaurant 1';
         restaurant1.address = address4;
-        restaurant1.email = 'resto1@mail.com';
+        restaurant1.email = 'resto1@email.com';
         restaurant1.name = 'great eats';
         restaurant1.owner = owner1;
         const burger = new Meal();
@@ -77,6 +77,20 @@ loadTypeOrmOptions()
         stew.price = 240;
         restaurant1.meals = [burger, stew];
         await getRepository(Restaurant).save(restaurant1);
+
+        const restaurant2 = new Restaurant();
+        const address5 = new Address();
+        address5.normalized = 'address of restaurant 2';
+        restaurant2.name = 'fancy eats';
+        restaurant2.owner = owner1;
+        restaurant2.email = 'resto2@email.com';
+        restaurant2.address = address5;
+        const pizza = new Meal();
+        pizza.price = 350;
+        pizza.name = 'deep dish pizza';
+        pizza.description = 'delicious and greasy';
+        restaurant2.meals = [pizza];
+        await getRepository(Restaurant).save(restaurant2);
 
     })
     // tslint:disable-next-line:no-console

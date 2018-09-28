@@ -10,6 +10,7 @@ import { Customer } from './entity/customer';
 import { Rating } from './entity/rating';
 import { Meal } from './entity/meal';
 import * as dotenv from 'dotenv';
+import { Order } from './entity/order';
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ loadTypeOrmOptions()
             await getRepository(Customer),
             await getRepository(Rating),
             await getRepository(Meal),
+            await getRepository(Order)
         );
 
         /**

@@ -1,32 +1,21 @@
 import request from 'supertest';
-import app from '../../src/app';
-import { mock, when, instance, anything, anyOfClass, reset, verify, deepEqual, strictEqual } from 'ts-mockito';
-import { Repository } from 'typeorm';
+import { when, anything, deepEqual, verify } from 'ts-mockito';
 import { Restaurant } from '../../src/entity/restaurant';
 import { Rating } from '../../src/entity/rating';
 import { Customer } from '../../src/entity/customer';
 import { Meal } from '../../src/entity/meal';
+import {
+    mockRestaurantRepository,
+    mockedApp,
+    mockCustomerRepository,
+    mockRatingRepository,
+    mockMealRepository,
+    afterEachTest,
+} from './setup';
 
 describe('/restaurants', () => {
 
-    const mockRestaurantRepository = mock<Repository<Restaurant>>(Repository);
-    const mockCustomerRepository = mock<Repository<Customer>>(Repository);
-    const mockRatingRepository = mock<Repository<Rating>>(Repository);
-    const mockMealRepository = mock<Repository<Meal>>(Repository);
-
-    const mockedApp = app(
-        instance(mockRestaurantRepository),
-        instance(mockCustomerRepository),
-        instance(mockRatingRepository),
-        instance(mockMealRepository),
-    );
-
-    afterEach(() => {
-        reset(mockRestaurantRepository);
-        reset(mockCustomerRepository);
-        reset(mockRatingRepository);
-        reset(mockMealRepository);
-    });
+    afterEach(() => afterEachTest());
 
     describe('GET /restaurants', () => {
         it('it returns a list of restaurants', async () => {
@@ -39,26 +28,28 @@ describe('/restaurants', () => {
             anotherRating.score = 50;
             restaurant.ratings = [rating, anotherRating];
 
-            when(mockRestaurantRepository.find(anything())).thenResolve([restaurant]);
+            when(mockRestaurantRepository.find(deepEqual({ relations: ['ratings'] }))).thenResolve([restaurant]);
 
             const result = await request(mockedApp).get('/v1/order-management/restaurants');
 
-            expect(result.body.restaurants).toEqual([{score: 75, name: 'Fancy Eats', id: 1}]);
+            expect(result.body.restaurants).toEqual([{ score: 75, name: 'Fancy Eats', id: 1 }]);
         });
     });
 
     describe('POST /restaurants/:id/rate', () => {
         it('rates a restaurant', async () => {
+            const customer = new Customer();
+            customer.userName = 'user';
             const restaurant = new Restaurant();
             restaurant.name = 'fancy eats';
-            const customer = new Customer();
             const rating = new Rating();
             rating.restaurant = restaurant;
+            rating.customer = customer;
             rating.score = 7;
 
-            when(mockRestaurantRepository.findOne({ id: 1 })).thenResolve(restaurant);
-            when(mockCustomerRepository.findOne({ userName: 'user' })).thenResolve(customer);
-            when(mockRatingRepository.save(anyOfClass(Rating))).thenResolve(rating);
+            when(mockRestaurantRepository.findOne(deepEqual({id: '1'}))).thenResolve(restaurant);
+            when(mockCustomerRepository.findOne(deepEqual({userName: 'user'}))).thenResolve(customer);
+            when(mockRatingRepository.save(deepEqual(rating))).thenResolve(rating);
 
             const result = await request(mockedApp)
                 .post('/v1/order-management/restaurants/1/rate')
@@ -66,6 +57,8 @@ describe('/restaurants', () => {
 
             expect(result.status).toBe(201);
             expect(result.body).toEqual({ restaurant: 'fancy eats', rating: 7 });
+            verify(mockCustomerRepository.findOne(deepEqual({userName: 'user'}))).called();
+            verify(mockRestaurantRepository.findOne(deepEqual({id: '1'}))).called();
         });
     });
 

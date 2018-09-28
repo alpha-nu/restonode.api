@@ -1,17 +1,20 @@
 import express from 'express';
 import logger from 'morgan';
 import restaurants from './routes/restaurants';
+import orders from './routes/orders';
 import { Repository } from 'typeorm';
 import { Restaurant } from './entity/restaurant';
 import { Customer } from './entity/customer';
 import { Rating } from './entity/rating';
 import { Meal } from './entity/meal';
+import { Order } from './entity/order';
 
 const app = (
     restaurantRepository: Repository<Restaurant>,
     customerRepository: Repository<Customer>,
     ratingRepository: Repository<Rating>,
     mealRepository: Repository<Meal>,
+    orderRepository: Repository<Order>
 ) => {
 
     const appInstance = express();
@@ -22,6 +25,8 @@ const app = (
 
     appInstance.use('/v1/order-management/restaurants',
         restaurants(restaurantRepository, customerRepository, ratingRepository, mealRepository));
+    appInstance.use('/v1/order-management/orders',
+        orders(mealRepository, customerRepository, orderRepository));
 
     return appInstance;
 };
