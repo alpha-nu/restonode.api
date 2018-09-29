@@ -43,10 +43,12 @@ yarn install
 yarn test-with-coverage
 ```
 
-Optionally:
-```shell
-yarn seed-data
+To create the schema only without the seed data, set the `synchronize` option to true in the `ormconfig.json`:
+```JSON
+ "synchronize": true
 ```
+which will also synchronize the ORM model with the database each time the express app starts.
+
 To start the service on the default node port:
 ```SHELL
 yarn run
