@@ -1,5 +1,6 @@
 import { Meal } from '../entity/meal';
 
+export const mealProjection = ({ name, description, price, id }: Meal) => ({ id, name, description, price });
 export const mealsProjection = (ms: Meal[]) => {
-    return ms.map(({ name, description, price, id }) => ({ id, name, description, price }));
+    return ms.map(mealProjection);
 };

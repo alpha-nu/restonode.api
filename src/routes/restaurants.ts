@@ -5,7 +5,7 @@ import { restaurantsProjection, restaurantProjection } from '../projections/rest
 import { Customer } from '../entity/customer';
 import { Rating } from '../entity/rating';
 import { Meal } from '../entity/meal';
-import { mealsProjection } from '../projections/meal';
+import { mealsProjection, mealProjection } from '../projections/meal';
 import { Address } from '../entity/address';
 import { safeHandler, RestoNodeError } from './errorHandlers';
 
@@ -47,6 +47,20 @@ export default (
         res.json({ meals: mealsProjection(result) });
     };
 
+    const createMealHandler = async (req: Request, res: Response) => {
+        const restaurant = await restaurantRepository.findOne({ id: req.params.id });
+
+        const payload = req.body;
+        const meal = new Meal();
+        meal.restaurant = restaurant!;
+        meal.name = payload.name;
+        meal.description = payload.description;
+        meal.price = payload.price;
+
+        const savedMeal = await mealRepository.save(meal);
+        res.status(201).json({ meal: mealProjection(savedMeal) });
+    };
+
     const rateRestaurantHandler = async (req: Request, res: Response) => {
         const restaurant = await restaurantRepository.findOne({ id: req.params.id });
         const customer = await customerRepository.findOne({ userName: req.body.userName });
@@ -65,5 +79,6 @@ export default (
         .get('/', getRestaurantsHandler)
         .post('/', safeHandler(createRestaurantHandler))
         .get('/:id/meals', getMealsHandler)
+        .post('/:id/meals', createMealHandler)
         .post('/:id/rate', rateRestaurantHandler);
 };

@@ -1,0 +1,181 @@
+{
+	"info": {
+		"_postman_id": "d626ae69-820f-4b73-ad81-e4275235b30b",
+		"name": "order-management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User Journeys",
+			"item": []
+		},
+		{
+			"name": "All restaurants",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/v1/order-management/restaurants",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"order-management",
+						"restaurants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Rate a restaurant",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"userName\": \"customer1\",\n\t\"rating\": 8\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/v1/order-management/restaurants/2/rate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"order-management",
+						"restaurants",
+						"2",
+						"rate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "View meals of a restaurant",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/v1/order-management/restaurants/1/meals",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"order-management",
+						"restaurants",
+						"1",
+						"meals"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Place an order",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n\t\"userName\": \"customer2\",\n\t\"mealIds\": [1, 2, 3]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/v1/order-management/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"order-management",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a restaurant",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"owner\": \"customer1\",\n\t\"address\": \"the new address\",\n\t\"email\": \"awesomeresto@email.com\",\n\t\"name\": \"awesome restaurant\"\n}"
+				},
+				"url": {
+					"raw": "{{api.url}}/v1/order-management/restaurants",
+					"host": [
+						"{{api.url}}"
+					],
+					"path": [
+						"v1",
+						"order-management",
+						"restaurants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a meal",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"yummy\",\n\t\"description\": \"fatty and juicy\",\n\t\"price\": 200\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/v1/order-management/restaurants/3/meals",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"order-management",
+						"restaurants",
+						"3",
+						"meals"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

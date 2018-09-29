@@ -128,4 +128,31 @@ describe('/restaurants', () => {
             });
         });
     });
+
+    describe('POST /restaurants/:id/meals', () => {
+        it('adds a meal to a restaurant menu', async () => {
+            const restaurant = new Restaurant();
+            const meal = new Meal();
+            meal.name = 'yummy';
+            meal.description = 'so fatty';
+            meal.price = 100;
+            meal.restaurant = restaurant;
+            when(mockRestaurantRepository.findOne(deepEqual({ id: '1' }))).thenResolve(restaurant);
+            when(mockMealRepository.save(deepEqual(meal))).thenResolve(meal);
+
+            const result = await request(mockedApp).post('/v1/order-management/restaurants/1/meals')
+                .send({
+                    name: 'yummy',
+                    description: 'so fatty',
+                    price: 100,
+                });
+
+            expect(result.status).toBe(201);
+            expect(result.body.meal).toEqual({
+                name: 'yummy',
+                description: 'so fatty',
+                price: 100,
+            });
+        });
+    });
 });

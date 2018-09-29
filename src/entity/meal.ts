@@ -17,7 +17,7 @@ export class Meal {
     @Column('int')
     price!: number;
 
-    @ManyToOne(type => Restaurant, restaurant => restaurant.meals)
+    @ManyToOne(type => Restaurant, restaurant => restaurant.meals, { nullable: false })
     restaurant!: Restaurant;
 
     @ManyToMany(type => Order, order => order.meals)
