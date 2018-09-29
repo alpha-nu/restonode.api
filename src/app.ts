@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import logger from 'morgan';
 import restaurants from './routes/restaurants';
 import orders from './routes/orders';
@@ -8,6 +8,7 @@ import { Customer } from './entity/customer';
 import { Rating } from './entity/rating';
 import { Meal } from './entity/meal';
 import { Order } from './entity/order';
+import { globalErrorHandler } from './routes/errorHandlers';
 
 const app = (
     restaurantRepository: Repository<Restaurant>,
@@ -27,6 +28,8 @@ const app = (
         restaurants(restaurantRepository, customerRepository, ratingRepository, mealRepository));
     appInstance.use('/v1/order-management/orders',
         orders(mealRepository, customerRepository, orderRepository));
+
+    appInstance.use(globalErrorHandler);
 
     return appInstance;
 };

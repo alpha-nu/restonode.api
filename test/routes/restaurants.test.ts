@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { when, anything, deepEqual, verify } from 'ts-mockito';
+import { when, anything, deepEqual, verify, anyOfClass, mock } from 'ts-mockito';
 import { Restaurant } from '../../src/entity/restaurant';
 import { Rating } from '../../src/entity/rating';
 import { Customer } from '../../src/entity/customer';
@@ -12,6 +12,7 @@ import {
     mockMealRepository,
     afterEachTest,
 } from './setup';
+import { Address } from '../../src/entity/address';
 
 describe('/restaurants', () => {
 
@@ -36,6 +37,49 @@ describe('/restaurants', () => {
         });
     });
 
+    describe('POST /restaurants', () => {
+        it('creates a restaurant', async () => {
+            const owner = new Customer();
+            owner.userName = 'userName';
+            owner.canCreateRestaurant = true;
+            const address = new Address();
+            address.normalized = 'address';
+            const restaurant = new Restaurant();
+            restaurant.owner = owner;
+            restaurant.email = 'awesome@email.com';
+            restaurant.name = 'awesome restaurant';
+            restaurant.address = address;
+            restaurant.ratings = [];
+
+            when(mockCustomerRepository.findOne(deepEqual({ userName: 'userName' }))).thenResolve(owner);
+            when(mockRestaurantRepository.save(deepEqual(restaurant))).thenResolve(restaurant);
+
+            const result = await request(mockedApp).post('/v1/order-management/restaurants')
+                .send({
+                    owner: 'userName',
+                    address: 'address',
+                    name: 'awesome restaurant',
+                    email: 'awesome@email.com',
+                });
+
+            expect(result.status).toBe(201);
+            // tslint:disable-next-line:no-null-keyword
+            expect(result.body).toEqual({ name: 'awesome restaurant', score: null });
+        });
+
+        it('returns 401 is user has no owner permissions', async () => {
+            const unauthorizedUser = new Customer();
+            unauthorizedUser.userName = 'imposter';
+            when(mockCustomerRepository.findOne(anything())).thenResolve(unauthorizedUser);
+
+            const result = await request(mockedApp).post('/v1/order-management/restaurants')
+                .send({ owner: 'imposter' });
+
+            expect(result.status).toBe(401);
+            expect(result.body.message).toBe('imposter is not authorized to create a restaurant.');
+        });
+    });
+
     describe('POST /restaurants/:id/rate', () => {
         it('rates a restaurant', async () => {
             const customer = new Customer();
@@ -47,8 +91,8 @@ describe('/restaurants', () => {
             rating.customer = customer;
             rating.score = 7;
 
-            when(mockRestaurantRepository.findOne(deepEqual({id: '1'}))).thenResolve(restaurant);
-            when(mockCustomerRepository.findOne(deepEqual({userName: 'user'}))).thenResolve(customer);
+            when(mockRestaurantRepository.findOne(deepEqual({ id: '1' }))).thenResolve(restaurant);
+            when(mockCustomerRepository.findOne(deepEqual({ userName: 'user' }))).thenResolve(customer);
             when(mockRatingRepository.save(deepEqual(rating))).thenResolve(rating);
 
             const result = await request(mockedApp)
@@ -57,8 +101,8 @@ describe('/restaurants', () => {
 
             expect(result.status).toBe(201);
             expect(result.body).toEqual({ restaurant: 'fancy eats', rating: 7 });
-            verify(mockCustomerRepository.findOne(deepEqual({userName: 'user'}))).called();
-            verify(mockRestaurantRepository.findOne(deepEqual({id: '1'}))).called();
+            verify(mockCustomerRepository.findOne(deepEqual({ userName: 'user' }))).called();
+            verify(mockRestaurantRepository.findOne(deepEqual({ id: '1' }))).called();
         });
     });
 
