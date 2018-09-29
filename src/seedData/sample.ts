@@ -28,7 +28,7 @@ loadTypeOrmOptions()
         // seed users
         const customer1 = new Customer();
         const address1 = new Address();
-        address1.normalized = 'address of customer 1';
+        address1.normalized = 'Balcarce 476 CABA Argentina';
         customer1.address = address1;
         customer1.canCreateRestaurant = false;
         customer1.userName = 'customer1';
@@ -39,7 +39,7 @@ loadTypeOrmOptions()
 
         const customer2 = new Customer();
         const address2 = new Address();
-        address2.normalized = 'address of customer 2';
+        address2.normalized = 'Bacacay 4700 caba argentina';
         customer2.address = address2;
         customer2.canCreateRestaurant = false;
         customer2.userName = 'customer2';
@@ -50,7 +50,7 @@ loadTypeOrmOptions()
 
         // seed restaurants
         const address3 = new Address();
-        address3.normalized = 'address of owner 1';
+        address3.normalized = 'Tucumán 3424, CABA, Argentina';
         const owner1 = new Customer();
         owner1.address = address3;
         owner1.canCreateRestaurant = true;
@@ -62,7 +62,7 @@ loadTypeOrmOptions()
 
         const restaurant1 = new Restaurant();
         const address4 = new Address();
-        address4.normalized = 'address of restaurant 1';
+        address4.normalized = 'perú 600, CABA, Argentina';
         restaurant1.address = address4;
         restaurant1.email = 'resto1@email.com';
         restaurant1.name = 'great eats';
@@ -80,7 +80,7 @@ loadTypeOrmOptions()
 
         const restaurant2 = new Restaurant();
         const address5 = new Address();
-        address5.normalized = 'address of restaurant 2';
+        address5.normalized = 'arenales 2302, CABA';
         restaurant2.name = 'fancy eats';
         restaurant2.owner = owner1;
         restaurant2.email = 'resto2@email.com';

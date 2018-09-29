@@ -4,6 +4,7 @@ export const restaurantProjection = (r: Restaurant) => ({
     name: r.name,
     score: r.ratings.reduce((acc, p) => acc + p.score, 0) / r.ratings.length,
     id: r.id,
+    address: r.address.normalized,
 });
 
 export const restaurantsProjection = (rs: Restaurant[]) => rs.map(_ => restaurantProjection(_));

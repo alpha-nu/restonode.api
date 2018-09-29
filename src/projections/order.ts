@@ -7,19 +7,28 @@ interface IMealGroup {
     meals: Meal[];
 }
 
-export const orderProjection = ({ userName, phone, address }: Customer, orderedMeals: Meal[]) => {
-
-    const mealsGroupedByRestaurant = orderedMeals.reduce((acc: { [index: string]: IMealGroup }, meal: Meal) => {
+export const groupMealsByRestaurant = (orderedMeals: Meal[]): { [index: string]: IMealGroup } => {
+    return orderedMeals.reduce((acc: { [index: string]: IMealGroup }, meal: Meal) => {
         acc[meal.restaurant.id] = acc[meal.restaurant.id] || { restaurant: meal.restaurant, meals: [] };
         acc[meal.restaurant.id].meals.push(meal);
         return acc;
     }, {} as { [index: string]: IMealGroup });
+};
 
-    const deliveries = Object.keys(mealsGroupedByRestaurant).map(key => {
-        const { restaurant, meals } = mealsGroupedByRestaurant[key];
+export const getRestaurantAddresses = (mealsByRestaurant: { [index: string]: IMealGroup }) => {
+    return Object.keys(mealsByRestaurant)
+        .map(_ => mealsByRestaurant[_].restaurant.address.normalized);
+};
+
+export const orderProjection = ({ userName, phone, address }: Customer,
+                                groupedMeals: { [index: string]: IMealGroup },
+                                etas: string[]) => {
+
+    const deliveries = Object.keys(groupedMeals).map((key, index) => {
+        const { restaurant, meals } = groupedMeals[key];
         return ({
             restaurant: { name: restaurant.name, email: restaurant.email },
-            eta: '',
+            eta: etas[index],
             meals: meals.map(({ name }) => name),
             subTotal: meals.reduce((acc, { price }) => acc + price, 0),
         });
@@ -28,7 +37,7 @@ export const orderProjection = ({ userName, phone, address }: Customer, orderedM
     return (
         {
             deliveries,
-            grandTotal: deliveries.reduce((acc, {subTotal}) => acc + subTotal, 0),
+            grandTotal: deliveries.reduce((acc, { subTotal }) => acc + subTotal, 0),
             customer: {
                 userName,
                 phone,

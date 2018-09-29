@@ -5,6 +5,7 @@ import {
     mockMealRepository,
     mockOrderRepository,
     afterEachTest,
+    mockDistanceMatrixService,
 } from './setup';
 import { Meal } from '../../src/entity/meal';
 import { when, deepEqual, verify, anyOfClass } from 'ts-mockito';
@@ -34,13 +35,13 @@ describe('/orders', () => {
                 deliveries: [
                     {
                         restaurant: { name: 'restaurant1', email: 'r1@email.com' },
-                        eta: '',
+                        eta: '40 mins',
                         meals: ['meal1', 'meal2'],
                         subTotal: 145,
                     },
                     {
                         restaurant: { name: 'restaurant2', email: 'r2@email.com' },
-                        eta: '',
+                        eta: '27 mins',
                         meals: ['meal3'],
                         subTotal: 70,
                     },
@@ -92,10 +93,14 @@ const setupHungryJoeOrder = () => {
 
     when(mockMealRepository.findByIds(
         deepEqual([1, 2, 3]),
-        deepEqual({ relations: ['restaurant'] })
+        deepEqual({ relations: ['restaurant', 'restaurant.address'] })
     )).thenResolve([meal1, meal2, meal3]);
     when(mockCustomerRepository.findOne(
         deepEqual({ userName: 'hungryJoe' }),
-        deepEqual({relations: ['address']})
+        deepEqual({ relations: ['address'] })
     )).thenResolve(customer);
+    when(mockDistanceMatrixService.getETAs(
+        deepEqual(['address of restaurant1', 'address of restaurant2']),
+        'joe\'s address'
+    )).thenResolve(['40 mins', '27 mins']);
 };

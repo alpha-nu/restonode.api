@@ -17,7 +17,7 @@ export default (
 ) => {
 
     const getRestaurantsHandler = async (req: Request, res: Response) => {
-        const result = await restaurantRepository.find({ relations: ['ratings'] });
+        const result = await restaurantRepository.find({ relations: ['ratings', 'address'] });
         res.json({ restaurants: restaurantsProjection(result) });
     };
 

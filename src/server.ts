@@ -11,6 +11,7 @@ import { Rating } from './entity/rating';
 import { Meal } from './entity/meal';
 import * as dotenv from 'dotenv';
 import { Order } from './entity/order';
+import { DistanceMatrixService } from './services/distanceMatrix';
 
 dotenv.config();
 
@@ -34,7 +35,8 @@ loadTypeOrmOptions()
             await getRepository(Customer),
             await getRepository(Rating),
             await getRepository(Meal),
-            await getRepository(Order)
+            await getRepository(Order),
+            new DistanceMatrixService()
         );
 
         /**

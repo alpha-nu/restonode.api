@@ -6,19 +6,22 @@ import { Rating } from '../../src/entity/rating';
 import { Customer } from '../../src/entity/customer';
 import { Meal } from '../../src/entity/meal';
 import { Order } from '../../src/entity/order';
+import { IDistanceMatrixService, DistanceMatrixService } from '../../src/services/distanceMatrix';
 
 export const mockRestaurantRepository = mock<Repository<Restaurant>>(Repository);
 export const mockCustomerRepository = mock<Repository<Customer>>(Repository);
 export const mockRatingRepository = mock<Repository<Rating>>(Repository);
 export const mockMealRepository = mock<Repository<Meal>>(Repository);
 export const mockOrderRepository = mock<Repository<Order>>(Repository);
+export const mockDistanceMatrixService = mock<IDistanceMatrixService>(DistanceMatrixService);
 
 export const mockedApp = app(
     instance(mockRestaurantRepository),
     instance(mockCustomerRepository),
     instance(mockRatingRepository),
     instance(mockMealRepository),
-    instance(mockOrderRepository)
+    instance(mockOrderRepository),
+    instance(mockDistanceMatrixService)
 );
 
 export const afterEachTest = () => {
@@ -26,4 +29,5 @@ export const afterEachTest = () => {
     reset(mockCustomerRepository);
     reset(mockRatingRepository);
     reset(mockMealRepository);
+    reset(mockDistanceMatrixService);
 };

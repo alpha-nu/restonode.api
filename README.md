@@ -12,7 +12,10 @@ the provided `.env.example` includes:
 DATABASE=
 DB_USER_NAME=
 DB_USER_PASSWORD=
+GOOGLE_API_KEY=AIzaSyAqqsqxlAvRP6lMM0BJ9lVW2lsTFOuXhVo
 ```
+***The included Google API key can be used in the sample .env file can be used***
+
 To use, **rename or copy** `.env.example` to `.env` and fill in the desired values.
 
 ## database setup

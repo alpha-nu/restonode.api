@@ -20,20 +20,25 @@ describe('/restaurants', () => {
 
     describe('GET /restaurants', () => {
         it('it returns a list of restaurants', async () => {
+            const address = new Address();
+            address.normalized = 'address';
             const restaurant = new Restaurant();
             restaurant.name = 'Fancy Eats';
             restaurant.id = 1;
+            restaurant.address = address;
             const rating = new Rating();
             rating.score = 100;
             const anotherRating = new Rating();
             anotherRating.score = 50;
             restaurant.ratings = [rating, anotherRating];
 
-            when(mockRestaurantRepository.find(deepEqual({ relations: ['ratings'] }))).thenResolve([restaurant]);
+            when(mockRestaurantRepository.find(
+                deepEqual({ relations: ['ratings', 'address'] }))
+            ).thenResolve([restaurant]);
 
             const result = await request(mockedApp).get('/v1/order-management/restaurants');
 
-            expect(result.body.restaurants).toEqual([{ score: 75, name: 'Fancy Eats', id: 1 }]);
+            expect(result.body.restaurants).toEqual([{ score: 75, name: 'Fancy Eats', id: 1, address: 'address' }]);
         });
     });
 
@@ -64,7 +69,7 @@ describe('/restaurants', () => {
 
             expect(result.status).toBe(201);
             // tslint:disable-next-line:no-null-keyword
-            expect(result.body).toEqual({ name: 'awesome restaurant', score: null });
+            expect(result.body).toEqual({ name: 'awesome restaurant', score: null, address: 'address' });
         });
 
         it('returns 401 is user has no owner permissions', async () => {
