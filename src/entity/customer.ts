@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToOne, OneToMany
 import { Address } from './address';
 import { Rating } from './rating';
 import { Restaurant } from './restaurant';
+import { Order } from './order';
 
 @Entity()
 export class Customer {
@@ -33,4 +34,7 @@ export class Customer {
 
     @OneToOne(type => Rating, rating => rating.customer)
     ratings!: Rating[];
+
+    @OneToMany(type => Order, order => order.customer)
+    orders!: Order[];
 }

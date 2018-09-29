@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, ManyToMany, JoinTable } from 'typeorm';
 import { Meal } from './meal';
 import { Customer } from './customer';
 
@@ -11,8 +11,7 @@ export class Order {
     @Column('int')
     total!: number;
 
-    @OneToOne(type => Customer, { nullable: false })
-    @JoinColumn()
+    @ManyToOne(type => Customer, customer => customer.orders, { nullable: false })
     customer!: Customer;
 
     @ManyToMany(type => Meal, meal => meal.orders)
