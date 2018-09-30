@@ -109,6 +109,15 @@ describe('/restaurants', () => {
             verify(mockCustomerRepository.findOne(deepEqual({ userName: 'user' }))).called();
             verify(mockRestaurantRepository.findOne(deepEqual({ id: '1' }))).called();
         });
+
+        it('returns 404 if restaurant is not found', async () => {
+            when(mockRestaurantRepository.findOne(anything())).thenResolve(undefined);
+
+            const result = await request(mockedApp).post('/v1/order-management/restaurants/999/rate').send();
+
+            expect(result.status).toBe(404);
+            expect(result.body.message).toBe('restaurant not found');
+        });
     });
 
     describe('GET /restaurants/:id/meals', () => {
@@ -131,6 +140,15 @@ describe('/restaurants', () => {
                     price: 150,
                 }],
             });
+        });
+
+        it('returns 404 if restaurant is not found', async () => {
+            when(mockMealRepository.find(anything())).thenResolve([]);
+
+            const result = await request(mockedApp).get('/v1/order-management/restaurants/1/meals');
+
+            expect(result.status).toBe(404);
+            expect(result.body.message).toBe('restaurant not found');
         });
     });
 
@@ -158,6 +176,15 @@ describe('/restaurants', () => {
                 description: 'so fatty',
                 price: 100,
             });
+        });
+
+        it('returns 404 if restaurant is not found', async () => {
+            when(mockRestaurantRepository.findOne(anything())).thenResolve(undefined);
+
+            const result = await request(mockedApp).post('/v1/order-management/restaurants/1/meals').send();
+
+            expect(result.status).toBe(404);
+            expect(result.body.message).toBe('restaurant not found');
         });
     });
 });

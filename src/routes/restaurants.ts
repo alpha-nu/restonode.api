@@ -8,6 +8,7 @@ import { Meal } from '../entity/meal';
 import { mealsProjection, mealProjection } from '../projections/meal';
 import { Address } from '../entity/address';
 import { safeHandler, RestoNodeError } from './errorHandlers';
+import validate from './validation';
 
 export default (
     restaurantRepository: Repository<Restaurant>,
@@ -44,11 +45,20 @@ export default (
 
     const getMealsHandler = async (req: Request, res: Response) => {
         const result = await mealRepository.find({ restaurant: { id: req.params.id } });
+
+        if (result === undefined || result.length === 0) {
+            throw new RestoNodeError(404, 'restaurant not found');
+        }
+
         res.json({ meals: mealsProjection(result) });
     };
 
     const createMealHandler = async (req: Request, res: Response) => {
         const restaurant = await restaurantRepository.findOne({ id: req.params.id });
+
+        if (restaurant === undefined) {
+            throw new RestoNodeError(404, 'restaurant not found');
+        }
 
         const payload = req.body;
         const meal = new Meal();
@@ -57,12 +67,18 @@ export default (
         meal.description = payload.description;
         meal.price = payload.price;
 
+        await validate<Meal>(meal);
+
         const savedMeal = await mealRepository.save(meal);
         res.status(201).json({ meal: mealProjection(savedMeal) });
     };
 
     const rateRestaurantHandler = async (req: Request, res: Response) => {
         const restaurant = await restaurantRepository.findOne({ id: req.params.id });
+        if (restaurant === undefined) {
+            throw new RestoNodeError(404, 'restaurant not found');
+        }
+
         const customer = await customerRepository.findOne({ userName: req.body.userName });
 
         const rating = new Rating();
@@ -78,7 +94,7 @@ export default (
     return Router()
         .get('/', getRestaurantsHandler)
         .post('/', safeHandler(createRestaurantHandler))
-        .get('/:id/meals', getMealsHandler)
-        .post('/:id/meals', createMealHandler)
-        .post('/:id/rate', rateRestaurantHandler);
+        .get('/:id/meals', safeHandler(getMealsHandler))
+        .post('/:id/meals', safeHandler(createMealHandler))
+        .post('/:id/rate', safeHandler(rateRestaurantHandler));
 };
