@@ -24,7 +24,11 @@ export default (
 
     const createRestaurantHandler = async (req: Request, res: Response) => {
         const payload = req.body;
-        const owner = await customerRepository.findOne({ userName: req.body.owner });
+        const owner = await customerRepository.findOne({ userName: payload.owner });
+
+        if (owner === undefined) {
+            throw new RestoNodeError(404, `did not recognize ${payload.userName}`);
+        }
 
         if (!owner!.canCreateRestaurant) {
             throw new RestoNodeError(401, `${owner!.userName} is not authorized to create a restaurant.`);
@@ -38,6 +42,8 @@ export default (
         restaurant.email = payload.email;
         restaurant.address = address;
         restaurant.ratings = [];
+
+        await validate<Restaurant>(restaurant);
 
         const savedRestaurant = await restaurantRepository.save(restaurant);
         res.status(201).json(restaurantProjection(savedRestaurant));
@@ -80,11 +86,16 @@ export default (
         }
 
         const customer = await customerRepository.findOne({ userName: req.body.userName });
+        if (customer === undefined) {
+            throw new RestoNodeError(404, `did not recognize ${req.body.userName}`);
+        }
 
         const rating = new Rating();
         rating.customer = customer!;
         rating.restaurant = restaurant!;
         rating.score = req.body.rating;
+
+        await validate<Rating>(rating);
 
         const savedRating = await ratingRepository.save(rating);
 

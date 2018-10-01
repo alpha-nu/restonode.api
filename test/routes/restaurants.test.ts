@@ -72,6 +72,17 @@ describe('/restaurants', () => {
             expect(result.body).toEqual({ name: 'awesome restaurant', score: null, address: 'address' });
         });
 
+        it('return 404 is user is not found', async () => {
+            when(mockCustomerRepository.findOne(anything())).thenResolve(undefined);
+
+            const result = await request(mockedApp).post('/v1/order-management/restaurants').send({
+                userName: 'imposter',
+            });
+
+            expect(result.status).toBe(404);
+            expect(result.body.message).toEqual(`did not recognize imposter`);
+        });
+
         it('returns 401 is user has no owner permissions', async () => {
             const unauthorizedUser = new Customer();
             unauthorizedUser.userName = 'imposter';
@@ -82,6 +93,31 @@ describe('/restaurants', () => {
 
             expect(result.status).toBe(401);
             expect(result.body.message).toBe('imposter is not authorized to create a restaurant.');
+        });
+
+        it('returns 400 is required information is missing', async () => {
+            const customer = new Customer();
+            customer.canCreateRestaurant = true;
+            when(mockCustomerRepository.findOne(anything())).thenResolve(customer);
+
+            const result = await request(mockedApp).post('/v1/order-management/restaurants')
+                .send({
+                    owner: '',
+                    address: '',
+                    name: '',
+                    email: 'invalid email',
+                });
+
+            expect(result.status).toBe(400);
+            expect(result.body.message)
+                .toContainEqual({
+                    children: [{ children: [], constraints: { isNotEmpty: 'is required' }, property: 'normalized' }],
+                    property: 'address',
+                });
+            expect(result.body.message)
+                .toContainEqual({ children: [], constraints: { isEmail: 'must be a valid email' }, property: 'email' });
+            expect(result.body.message)
+                .toContainEqual({ children: [], constraints: { isNotEmpty: 'is required' }, property: 'name' });
         });
     });
 
@@ -110,6 +146,18 @@ describe('/restaurants', () => {
             verify(mockRestaurantRepository.findOne(deepEqual({ id: '1' }))).called();
         });
 
+        it('return 404 is user is not found', async () => {
+            when(mockRestaurantRepository.findOne(anything())).thenResolve(mock(Restaurant));
+            when(mockCustomerRepository.findOne(anything())).thenResolve(undefined);
+
+            const result = await request(mockedApp).post('/v1/order-management/restaurants').send({
+                userName: 'imposter',
+            });
+
+            expect(result.status).toBe(404);
+            expect(result.body.message).toEqual(`did not recognize imposter`);
+        });
+
         it('returns 404 if restaurant is not found', async () => {
             when(mockRestaurantRepository.findOne(anything())).thenResolve(undefined);
 
@@ -117,6 +165,24 @@ describe('/restaurants', () => {
 
             expect(result.status).toBe(404);
             expect(result.body.message).toBe('restaurant not found');
+        });
+
+        it('returns 400 if rating score is outside of 1 - 10', async () => {
+            when(mockRestaurantRepository.findOne(anything())).thenResolve(mock(Restaurant));
+            when(mockCustomerRepository.findOne(anything())).thenResolve(mock(Customer));
+            let result = await request(mockedApp).post('/v1/order-management/restaurants/1/rate')
+                .send({ rating: 20 });
+
+            expect(result.status).toBe(400);
+            expect(result.body.message)
+                .toContainEqual({ children: [], constraints: { max: 'must be <= 10' }, property: 'score' });
+
+            result = await request(mockedApp).post('/v1/order-management/restaurants/1/rate')
+                .send({ rating: 0 });
+
+            expect(result.status).toBe(400);
+            expect(result.body.message)
+                .toContainEqual({ children: [], constraints: { min: 'must be >= 1' }, property: 'score' });
         });
     });
 
@@ -185,6 +251,24 @@ describe('/restaurants', () => {
 
             expect(result.status).toBe(404);
             expect(result.body.message).toBe('restaurant not found');
+        });
+
+        it('returns 400 if required meal information is missing', async () => {
+            when(mockRestaurantRepository.findOne(anything())).thenResolve(mock(Restaurant));
+
+            const result = await request(mockedApp).post('/v1/order-management/restaurants/1/meals').send();
+
+            expect(result.status).toBe(400);
+            expect(result.body.message)
+                .toContainEqual({ children: [], constraints: { isNotEmpty: 'is required' }, property: 'name' });
+            expect(result.body.message)
+                .toContainEqual({ children: [], constraints: { isNotEmpty: 'is required' }, property: 'description' });
+            expect(result.body.message)
+                .toContainEqual({
+                    children: [],
+                    constraints: { isNotEmpty: 'is required', isNumber: 'must be a number' },
+                    property: 'price',
+                });
         });
     });
 });

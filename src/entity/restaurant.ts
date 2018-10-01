@@ -3,6 +3,7 @@ import { Address } from './address';
 import { Meal } from './meal';
 import { Rating } from './rating';
 import { Customer } from './customer';
+import { ValidateNested, IsNotEmpty, IsEmail } from 'class-validator';
 
 @Entity()
 export class Restaurant {
@@ -10,12 +11,15 @@ export class Restaurant {
     @PrimaryGeneratedColumn()
     id!: number;
 
+    @IsNotEmpty({ message: 'is required' })
     @Column()
     name!: string;
 
+    @IsEmail({}, { message: 'must be a valid email' })
     @Column()
     email!: string;
 
+    @ValidateNested()
     @OneToOne(type => Address, { cascade: true })
     @JoinColumn()
     address!: Address;

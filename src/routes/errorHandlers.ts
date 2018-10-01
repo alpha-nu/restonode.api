@@ -2,13 +2,13 @@ import { RequestHandler, Request, Response, NextFunction } from 'express';
 
 export class RestoNodeError {
     private code: number;
-    private message: string;
-    constructor(code: number, message: string) {
+    private error: string;
+    constructor(code: number, error: any) {
         this.code = code;
-        this.message = message;
+        this.error = error;
     }
     public getError() {
-        return ({ code: this.code, message: this.message });
+        return ({ code: this.code, message: this.error });
     }
 }
 
