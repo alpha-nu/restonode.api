@@ -5,7 +5,7 @@
   "scripts": {
     "start": "ts-node ./src/server.ts",
     "test": "yarn tslint && jest --forceExit --detectOpenHandles",
-    "test-with-coverage": "jest --forceExit --coverage --verbose --detectOpenHandles",
+    "test-with-coverage": "yarn tslint && jest --forceExit --coverage --verbose --detectOpenHandles",
     "test-watch": "yarn test -- --watchAll",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "seed-data": "ts-node ./src/seedData/sample.ts"

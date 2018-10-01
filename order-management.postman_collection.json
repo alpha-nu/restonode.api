@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "4dd287e0-d001-400b-9ab0-78af465fa24d",
+		"_postman_id": "2cf03662-7f73-476e-b864-7abd33cd5876",
 		"name": "order-management",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -111,7 +111,10 @@
 							"request": {
 								"method": "GET",
 								"header": [],
-								"body": {},
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
 								"url": {
 									"raw": "{{api.url}}/v1/order-management/restaurants/3/meals",
 									"host": [
@@ -366,6 +369,62 @@
 								"restaurants",
 								"1",
 								"meals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create invalid order - no meals",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n\t\"userName\": \"hungryJoe\",\n\t\"mealIds\": []\n}"
+						},
+						"url": {
+							"raw": "{{api.url}}/v1/order-management/orders",
+							"host": [
+								"{{api.url}}"
+							],
+							"path": [
+								"v1",
+								"order-management",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create malformed order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n\t\"userName\": \"hungryJoe\"\n}"
+						},
+						"url": {
+							"raw": "{{api.url}}/v1/order-management/orders",
+							"host": [
+								"{{api.url}}"
+							],
+							"path": [
+								"v1",
+								"order-management",
+								"orders"
 							]
 						}
 					},

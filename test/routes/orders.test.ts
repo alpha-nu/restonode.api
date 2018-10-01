@@ -8,7 +8,7 @@ import {
     mockDistanceMatrixService,
 } from './setup';
 import { Meal } from '../../src/entity/meal';
-import { when, deepEqual, verify, anyOfClass } from 'ts-mockito';
+import { when, deepEqual, verify, anyOfClass, anything, mock } from 'ts-mockito';
 import { Restaurant } from '../../src/entity/restaurant';
 import { Customer } from '../../src/entity/customer';
 import { Address } from '../../src/entity/address';
@@ -53,6 +53,37 @@ describe('/orders', () => {
                     address: 'joe\'s address',
                 },
             });
+        });
+
+        it('returns 404 if customer is not found', async () => {
+            when(mockMealRepository.findByIds(anything(), anything())).thenResolve(mock(Array));
+            when(mockCustomerRepository.findOne(
+                deepEqual({ userName: 'imposter' }), anything())
+            ).thenResolve(undefined);
+
+            const result = await request(mockedApp).post('/v1/order-management/orders').send({
+                userName: 'imposter',
+            });
+
+            expect(result.status).toBe(404);
+            expect(result.body.message).toEqual('did not recognize imposter');
+        });
+
+        it('returns 400 if no meals are provided', async () => {
+            when(mockMealRepository.findByIds(anything(), anything())).thenResolve([]);
+
+            const result = await request(mockedApp).post('/v1/order-management/orders').send();
+
+            expect(result.status).toBe(400);
+            expect(result.body.message).toEqual('order must include at least one meal');
+        });
+
+        it('returns 500 server error for malformed request', async () => {
+
+            const result = await request(mockedApp).post('/v1/order-management/orders').send();
+
+            expect(result.status).toBe(500);
+            expect(result.body.message).toEqual('something terrible happened');
         });
     });
 });

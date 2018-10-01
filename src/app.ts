@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import logger from 'morgan';
 import restaurants from './routes/restaurants';
 import orders from './routes/orders';
