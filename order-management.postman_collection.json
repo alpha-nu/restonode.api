@@ -1,27 +1,392 @@
 {
 	"info": {
-		"_postman_id": "d626ae69-820f-4b73-ad81-e4275235b30b",
+		"_postman_id": "4dd287e0-d001-400b-9ab0-78af465fa24d",
 		"name": "order-management",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
 			"name": "User Journeys",
-			"item": []
+			"item": [
+				{
+					"name": "Create a New Restaurant",
+					"item": [
+						{
+							"name": "Mr. Big Shot adds a restaurant",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"owner\": \"mrBigShot\",\n\t\"address\": \"Morelos 50, CABA, Argentina\",\n\t\"email\": \"chinese.delights@email.com\",\n\t\"name\": \"Chinese Delights\"\n}"
+								},
+								"url": {
+									"raw": "{{api.url}}/v1/order-management/restaurants",
+									"host": [
+										"{{api.url}}"
+									],
+									"path": [
+										"v1",
+										"order-management",
+										"restaurants"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add fried rice meal",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\": \"fried rice\",\n\t\"description\": \"wok fried rice with vegetables\",\n\t\"price\": 300\n}"
+								},
+								"url": {
+									"raw": "{{api.url}}/v1/order-management/restaurants/3/meals",
+									"host": [
+										"{{api.url}}"
+									],
+									"path": [
+										"v1",
+										"order-management",
+										"restaurants",
+										"3",
+										"meals"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Peking Duck meal",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\": \"Peking Duck\",\n\t\"description\": \"delicious crusted duck\",\n\t\"price\": 860\n}"
+								},
+								"url": {
+									"raw": "{{api.url}}/v1/order-management/restaurants/3/meals",
+									"host": [
+										"{{api.url}}"
+									],
+									"path": [
+										"v1",
+										"order-management",
+										"restaurants",
+										"3",
+										"meals"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Create a new restaurant\nAdd meals",
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Hungry Joe orders chinese food",
+					"item": [
+						{
+							"name": "view meals of Chinese Delights",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{api.url}}/v1/order-management/restaurants/3/meals",
+									"host": [
+										"{{api.url}}"
+									],
+									"path": [
+										"v1",
+										"order-management",
+										"restaurants",
+										"3",
+										"meals"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "order all the chinese meals",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \n\t\"userName\": \"hungryJoe\",\n\t\"mealIds\": [4, 5]\n}"
+								},
+								"url": {
+									"raw": "{{api.url}}/v1/order-management/orders",
+									"host": [
+										"{{api.url}}"
+									],
+									"path": [
+										"v1",
+										"order-management",
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "rates Chinese Delights",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"userName\": \"hungryJoe\",\n\t\"rating\": 8\n}"
+								},
+								"url": {
+									"raw": "{{api.url}}/v1/order-management/restaurants/3/rate",
+									"host": [
+										"{{api.url}}"
+									],
+									"path": [
+										"v1",
+										"order-management",
+										"restaurants",
+										"3",
+										"rate"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Multi-restaurant order",
+					"item": [
+						{
+							"name": "greedy pete orders everything!!",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \n\t\"userName\": \"greedyPete\",\n\t\"mealIds\": [1, 2, 3, 4, 5]\n}"
+								},
+								"url": {
+									"raw": "{{api.url}}/v1/order-management/orders",
+									"host": [
+										"{{api.url}}"
+									],
+									"path": [
+										"v1",
+										"order-management",
+										"orders"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			]
+		},
+		{
+			"name": "Validation and Erros",
+			"item": [
+				{
+					"name": "invalid rating request - unknown user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"userName\": \"unknown user\",\n\t\"rating\": 8\n}"
+						},
+						"url": {
+							"raw": "{{api.url}}/v1/order-management/restaurants/1/rate",
+							"host": [
+								"{{api.url}}"
+							],
+							"path": [
+								"v1",
+								"order-management",
+								"restaurants",
+								"1",
+								"rate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "invalid rating request - invalid rating",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"userName\": \"greedyPete\",\n\t\"rating\": 20\n}"
+						},
+						"url": {
+							"raw": "{{api.url}}/v1/order-management/restaurants/1/rate",
+							"host": [
+								"{{api.url}}"
+							],
+							"path": [
+								"v1",
+								"order-management",
+								"restaurants",
+								"1",
+								"rate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "unknow restaurant",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{api.url}}/v1/order-management/restaurants/20/meals",
+							"host": [
+								"{{api.url}}"
+							],
+							"path": [
+								"v1",
+								"order-management",
+								"restaurants",
+								"20",
+								"meals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create invalid restaurant",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"owner\": \"mrBigShot\",\n\t\"address\": \"\",\n\t\"email\": \"\",\n\t\"name\": \"\"\n}"
+						},
+						"url": {
+							"raw": "{{api.url}}/v1/order-management/restaurants",
+							"host": [
+								"{{api.url}}"
+							],
+							"path": [
+								"v1",
+								"order-management",
+								"restaurants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create invalid meal",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"\",\n\t\"description\": \"\",\n\t\"price\": null\n}"
+						},
+						"url": {
+							"raw": "{{api.url}}/v1/order-management/restaurants/1/meals",
+							"host": [
+								"{{api.url}}"
+							],
+							"path": [
+								"v1",
+								"order-management",
+								"restaurants",
+								"1",
+								"meals"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "All restaurants",
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
-					"raw": "http://localhost:3000/v1/order-management/restaurants",
-					"protocol": "http",
+					"raw": "{{api.url}}/v1/order-management/restaurants",
 					"host": [
-						"localhost"
+						"{{api.url}}"
 					],
-					"port": "3000",
 					"path": [
 						"v1",
 						"order-management",
@@ -43,45 +408,19 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"userName\": \"customer1\",\n\t\"rating\": 8\n}"
+					"raw": "{\n\t\"userName\": \"hungryJoe\",\n\t\"rating\": 8\n}"
 				},
 				"url": {
-					"raw": "http://localhost:3000/v1/order-management/restaurants/2/rate",
-					"protocol": "http",
+					"raw": "{{api.url}}/v1/order-management/restaurants/1/rate",
 					"host": [
-						"localhost"
+						"{{api.url}}"
 					],
-					"port": "3000",
-					"path": [
-						"v1",
-						"order-management",
-						"restaurants",
-						"2",
-						"rate"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "View meals of a restaurant",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {},
-				"url": {
-					"raw": "http://localhost:3000/v1/order-management/restaurants/1/meals",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3000",
 					"path": [
 						"v1",
 						"order-management",
 						"restaurants",
 						"1",
-						"meals"
+						"rate"
 					]
 				}
 			},
@@ -99,19 +438,42 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{ \n\t\"userName\": \"customer2\",\n\t\"mealIds\": [1, 2, 3]\n}"
+					"raw": "{ \n\t\"userName\": \"hungryJoe\",\n\t\"mealIds\": [1, 2, 3, 4]\n}"
 				},
 				"url": {
-					"raw": "http://localhost:3000/v1/order-management/orders",
-					"protocol": "http",
+					"raw": "{{api.url}}/v1/order-management/orders",
 					"host": [
-						"localhost"
+						"{{api.url}}"
 					],
-					"port": "3000",
 					"path": [
 						"v1",
 						"order-management",
 						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "View meals of a restaurant",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{api.url}}/v1/order-management/restaurants/2/meals",
+					"host": [
+						"{{api.url}}"
+					],
+					"path": [
+						"v1",
+						"order-management",
+						"restaurants",
+						"2",
+						"meals"
 					]
 				}
 			},
@@ -129,7 +491,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"owner\": \"customer1\",\n\t\"address\": \"the new address\",\n\t\"email\": \"awesomeresto@email.com\",\n\t\"name\": \"awesome restaurant\"\n}"
+					"raw": "{\n\t\"owner\": \"mrBigShot\",\n\t\"address\": \"Morelos 50, CABA, Argentina\",\n\t\"email\": \"awesomeresto@email.com\",\n\t\"name\": \"A very real restaurant\"\n}"
 				},
 				"url": {
 					"raw": "{{api.url}}/v1/order-management/restaurants",
@@ -157,20 +519,18 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"name\": \"yummy\",\n\t\"description\": \"fatty and juicy\",\n\t\"price\": 200\n}"
+					"raw": "{\n\t\"name\": \"fishy\",\n\t\"description\": \"a very fishy dish\",\n\t\"price\": 300\n}"
 				},
 				"url": {
-					"raw": "http://localhost:3000/v1/order-management/restaurants/3/meals",
-					"protocol": "http",
+					"raw": "{{api.url}}/v1/order-management/restaurants/1/meals",
 					"host": [
-						"localhost"
+						"{{api.url}}"
 					],
-					"port": "3000",
 					"path": [
 						"v1",
 						"order-management",
 						"restaurants",
-						"3",
+						"1",
 						"meals"
 					]
 				}
