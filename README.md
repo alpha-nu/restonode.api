@@ -56,3 +56,7 @@ To start the service on the default node port:
 ```SHELL
 yarn run
 ```
+
+**For convenience, a postman collection is included in the source, the json export `.\order-management.postman_collection.json` contains sample requests for all endpoints as well as user journeys spanning multiple requests. HTTP errors and entity validations have a dedicated folder in the collection as well.**
+
+For easy testing please run `yarn seed-data` first to be able to get the users accounts used in the collection.
