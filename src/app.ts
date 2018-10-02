@@ -17,7 +17,8 @@ const app = (
     ratingRepository: Repository<Rating>,
     mealRepository: Repository<Meal>,
     orderRepository: Repository<Order>,
-    distanceMatrixService: IDistanceMatrixService
+    distanceMatrixService: IDistanceMatrixService,
+    orderNotification: (order: any) => boolean
 ) => {
 
     const appInstance = express();
@@ -29,7 +30,11 @@ const app = (
     appInstance.use('/v1/order-management/restaurants',
         restaurants(restaurantRepository, customerRepository, ratingRepository, mealRepository));
     appInstance.use('/v1/order-management/orders',
-        orders(mealRepository, customerRepository, orderRepository, distanceMatrixService));
+        orders(mealRepository,
+            customerRepository,
+            orderRepository,
+            distanceMatrixService,
+            orderNotification));
 
     appInstance.use(globalErrorHandler);
 

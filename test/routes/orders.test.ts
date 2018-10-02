@@ -6,6 +6,7 @@ import {
     mockOrderRepository,
     afterEachTest,
     mockDistanceMatrixService,
+    mockOrderNotification,
 } from './setup';
 import { Meal } from '../../src/entity/meal';
 import { when, deepEqual, verify, anyOfClass, anything, mock } from 'ts-mockito';
@@ -29,9 +30,7 @@ describe('/orders', () => {
                     mealIds: [1, 2, 3],
                 });
 
-            verify(mockOrderRepository.save(anyOfClass(Order))).once();
-            expect(result.status).toBe(201);
-            expect(result.body).toEqual({
+            const expectedOrder = {
                 deliveries: [
                     {
                         restaurant: { name: 'restaurant1', email: 'r1@email.com' },
@@ -52,7 +51,12 @@ describe('/orders', () => {
                     phone: '1111111111',
                     address: 'joe\'s address',
                 },
-            });
+            };
+
+            verify(mockOrderRepository.save(anyOfClass(Order))).once();
+            expect(result.status).toBe(201);
+            expect(result.body).toEqual(expectedOrder);
+            expect(mockOrderNotification.mock.calls[0][0]).toEqual(expectedOrder);
         });
 
         it('returns 404 if customer is not found', async () => {

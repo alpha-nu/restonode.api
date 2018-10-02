@@ -46,6 +46,8 @@ yarn install
 yarn test-with-coverage
 ```
 
+***please make sure all downstream services (i.e. RabbitMQ and MySql) are up or the server will shutdown with a `Downstream System Error`. It is a design choice to ensure a more robust api***
+
 To create the schema only without the seed data, set the `synchronize` option to true in the `ormconfig.json`:
 ```JSON
  "synchronize": true
@@ -60,3 +62,6 @@ yarn run
 **For convenience, a postman collection is included in the source, the json export `.\order-management.postman_collection.json` contains sample requests for all endpoints as well as user journeys spanning multiple requests. HTTP errors and entity validations have a dedicated folder in the collection as well.**
 
 For easy testing please run `yarn seed-data` first to be able to get the users accounts used in the collection.
+
+##running the notification consumers
+For a full end to end working example, make sure the customer and restaurant notification consumers are running. For more details refer to [restonode.messaging documentation](https://github.com/alpha-nu/restonode.messaging)

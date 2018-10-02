@@ -14,6 +14,7 @@ export const mockRatingRepository = mock<Repository<Rating>>(Repository);
 export const mockMealRepository = mock<Repository<Meal>>(Repository);
 export const mockOrderRepository = mock<Repository<Order>>(Repository);
 export const mockDistanceMatrixService = mock<IDistanceMatrixService>(DistanceMatrixService);
+export const mockOrderNotification = jest.fn();
 
 export const mockedApp = app(
     instance(mockRestaurantRepository),
@@ -21,7 +22,8 @@ export const mockedApp = app(
     instance(mockRatingRepository),
     instance(mockMealRepository),
     instance(mockOrderRepository),
-    instance(mockDistanceMatrixService)
+    instance(mockDistanceMatrixService),
+    mockOrderNotification
 );
 
 export const afterEachTest = () => {

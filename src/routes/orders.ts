@@ -11,7 +11,8 @@ export default (
     mealRepository: Repository<Meal>,
     customerRepository: Repository<Customer>,
     orderRepository: Repository<Order>,
-    distanceMatrixService: IDistanceMatrixService
+    distanceMatrixService: IDistanceMatrixService,
+    orderNotification: (order: any) => boolean
 ) => {
     const createOrderHandler = async (req: Request, res: Response) => {
         const meals = await mealRepository.findByIds(req.body.mealIds,
@@ -39,6 +40,8 @@ export default (
         order.total = result.grandTotal;
 
         orderRepository.save(order);
+
+        orderNotification(result);
 
         res.status(201).json(result);
     };

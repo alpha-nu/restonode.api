@@ -12,6 +12,7 @@ import { Meal } from './entity/meal';
 import * as dotenv from 'dotenv';
 import { Order } from './entity/order';
 import { DistanceMatrixService } from './services/distanceMatrix';
+import orderNotification from './messagin/channel';
 
 dotenv.config();
 
@@ -36,7 +37,8 @@ loadTypeOrmOptions()
             await getRepository(Rating),
             await getRepository(Meal),
             await getRepository(Order),
-            new DistanceMatrixService()
+            new DistanceMatrixService(),
+            await orderNotification()
         );
 
         /**
@@ -120,4 +122,8 @@ loadTypeOrmOptions()
                 : 'port ' + addr.port;
             debug('Listening on ' + bind);
         }
+    }).catch(_ => {
+        // tslint:disable-next-line:no-console
+        console.log('Downstream System Error: ', _.toString());
+        process.exit(0);
     });
