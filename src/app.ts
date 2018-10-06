@@ -10,6 +10,7 @@ import { Meal } from './entity/meal';
 import { Order } from './entity/order';
 import { globalErrorHandler } from './routes/errorHandlers';
 import { IDistanceMatrixService } from './services/distanceMatrix';
+import cors from 'cors';
 
 const app = (
     restaurantRepository: Repository<Restaurant>,
@@ -26,6 +27,7 @@ const app = (
     appInstance.use(logger('dev'));
     appInstance.use(express.json());
     appInstance.use(express.urlencoded({ extended: false }));
+    appInstance.use(cors());
 
     appInstance.use('/v1/order-management/restaurants',
         restaurants(restaurantRepository, customerRepository, ratingRepository, mealRepository));

@@ -44,7 +44,7 @@ loadTypeOrmOptions()
         /**
          * Get port from environment and store in Express.
          */
-        const port = normalizePort(process.env.PORT || '3000');
+        const port = normalizePort(process.env.RESTONODE_API_PORT || '3000');
         appInstance.set('port', port);
 
         /**
