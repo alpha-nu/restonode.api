@@ -27,7 +27,7 @@ describe('/orders', () => {
             const result = await request(mockedApp).post('/v1/order-management/orders')
                 .send({
                     userName: 'hungryJoe',
-                    mealIds: [1, 2, 3],
+                    meals: [{ id: 1, quantity: 2 }, { id: 2, quantity: 1 }, { id: 3, quantity: 4 }],
                 });
 
             const expectedOrder = {
@@ -35,17 +35,17 @@ describe('/orders', () => {
                     {
                         restaurant: { name: 'restaurant1', email: 'r1@email.com' },
                         eta: '40 mins',
-                        meals: ['meal1', 'meal2'],
-                        subTotal: 145,
+                        meals: [{ name: 'meal1', quantity: 2 }, { name: 'meal2', quantity: 1 }],
+                        subTotal: 245,
                     },
                     {
                         restaurant: { name: 'restaurant2', email: 'r2@email.com' },
                         eta: '27 mins',
-                        meals: ['meal3'],
-                        subTotal: 70,
+                        meals: [{ name: 'meal3', quantity: 4 }],
+                        subTotal: 280,
                     },
                 ],
-                grandTotal: 215,
+                grandTotal: 525,
                 customer: {
                     userName: 'hungryJoe',
                     phone: '1111111111',
@@ -109,15 +109,18 @@ const setupHungryJoeOrder = () => {
     restaurant2.address = address2;
     const meal1 = new Meal();
     meal1.price = 100;
+    meal1.id = 1;
     meal1.name = 'meal1';
     meal1.restaurant = restaurant1;
     const meal2 = new Meal();
     meal2.price = 45;
     meal2.name = 'meal2';
+    meal2.id = 2;
     meal2.restaurant = restaurant1;
     const meal3 = new Meal();
     meal3.price = 70;
     meal3.name = 'meal3';
+    meal3.id = 3;
     meal3.restaurant = restaurant2;
     const customer = new Customer();
     customer.userName = 'hungryJoe';

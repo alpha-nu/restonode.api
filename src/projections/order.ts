@@ -7,6 +7,11 @@ interface IMealGroup {
     meals: Meal[];
 }
 
+interface IMealQuantity {
+    id: number;
+    quantity: number;
+}
+
 export const groupMealsByRestaurant = (orderedMeals: Meal[]): { [index: string]: IMealGroup } => {
     return orderedMeals.reduce((acc: { [index: string]: IMealGroup }, meal: Meal) => {
         acc[meal.restaurant.id] = acc[meal.restaurant.id] || { restaurant: meal.restaurant, meals: [] };
@@ -20,17 +25,21 @@ export const getRestaurantAddresses = (mealsByRestaurant: { [index: string]: IMe
         .map(_ => mealsByRestaurant[_].restaurant.address.normalized);
 };
 
-export const orderProjection = ({ userName, phone, address }: Customer,
-                                groupedMeals: { [index: string]: IMealGroup },
-                                etas: string[]) => {
+export const orderProjection = (
+    { userName, phone, address }: Customer,
+    groupedMeals: { [index: string]: IMealGroup },
+    etas: string[],
+    quantities: IMealQuantity[]
+) => {
 
+    const mealQuantity = (id: number): IMealQuantity => quantities.find(_ => _.id === id)!;
     const deliveries = Object.keys(groupedMeals).map((key, index) => {
         const { restaurant, meals } = groupedMeals[key];
         return ({
             restaurant: { name: restaurant.name, email: restaurant.email },
             eta: etas[index],
-            meals: meals.map(({ name }) => name),
-            subTotal: meals.reduce((acc, { price }) => acc + price, 0),
+            meals: meals.map(({ name, id }) => ({ name, quantity: mealQuantity(id).quantity })),
+            subTotal: meals.reduce((acc, { price, id }) => acc + (price * mealQuantity(id).quantity), 0),
         });
     });
 

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "4bb59707-5473-4678-8cd4-70acd5d5efba",
+		"_postman_id": "fcfd18fa-58e7-4ada-99eb-a8b3ebecb214",
 		"name": "order-management",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -143,7 +143,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{ \n\t\"userName\": \"hungryJoe\",\n\t\"mealIds\": [4, 5]\n}"
+									"raw": "{ \n\t\"userName\": \"hungryJoe\",\n\t\"meals\": [{\"id\": 4, \"quantity\": 1}, {\"id\": 5, \"quantity\": 2}]\n}"
 								},
 								"url": {
 									"raw": "{{api.url}}/v1/order-management/orders",
@@ -207,7 +207,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{ \n\t\"userName\": \"greedyPete\",\n\t\"mealIds\": [1, 2, 3, 4, 5]\n}"
+									"raw": "{ \n\t\"userName\": \"greedyPete\",\n\t\"meals\": [{\"id\": 1, \"quantity\": 1}, {\"id\": 2, \"quantity\": 3}, {\"id\": 3, \"quantity\": 1}, {\"id\": 4, \"quantity\": 2}, {\"id\": 5, \"quantity\": 1}]\n}"
 								},
 								"url": {
 									"raw": "{{api.url}}/v1/order-management/orders",
@@ -361,7 +361,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \n\t\"userName\": \"hungryJoe\",\n\t\"mealIds\": []\n}"
+							"raw": "{ \n\t\"userName\": \"hungryJoe\",\n\t\"meals\": []\n}"
 						},
 						"url": {
 							"raw": "{{api.url}}/v1/order-management/orders",
@@ -472,7 +472,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{ \n\t\"userName\": \"hungryJoe\",\n\t\"mealIds\": [1, 2, 3, 4]\n}"
+					"raw": "{ \n\t\"userName\": \"hungryJoe\",\n\t\"meals\": [{\"id\": 1, \"quantity\": 1}, {\"id\": 2, \"quantity\": 3}, {\"id\": 3, \"quantity\": 1}, {\"id\": 4, \"quantity\": 2}]\n}"
 				},
 				"url": {
 					"raw": "{{api.url}}/v1/order-management/orders",

@@ -15,7 +15,9 @@ export default (
     orderNotification: (order: any) => boolean
 ) => {
     const createOrderHandler = async (req: Request, res: Response) => {
-        const meals = await mealRepository.findByIds(req.body.mealIds,
+        const mealsWithQuantity = req.body.meals || [];
+        const mealIds = mealsWithQuantity.map(({ id }: any) => id);
+        const meals = await mealRepository.findByIds(mealIds,
             {
                 relations: ['restaurant', 'restaurant.address'],
             });
@@ -33,7 +35,7 @@ export default (
 
         const etas = await distanceMatrixService.getETAs(restaurantAddresses, customer!.address.normalized);
 
-        const result = orderProjection(customer!, mealsByRestaurant, etas);
+        const result = orderProjection(customer!, mealsByRestaurant, etas, mealsWithQuantity);
         const order = new Order();
         order.customer = customer!;
         order.meals = meals;
