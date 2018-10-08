@@ -52,10 +52,6 @@ export default (
     const getMealsHandler = async (req: Request, res: Response) => {
         const result = await mealRepository.find({ restaurant: { id: req.params.id } });
 
-        if (result === undefined || result.length === 0) {
-            throw new RestoNodeError(404, 'restaurant not found');
-        }
-
         res.json({ meals: mealsProjection(result) });
     };
 

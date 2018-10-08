@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "2cf03662-7f73-476e-b864-7abd33cd5876",
+		"_postman_id": "4bb59707-5473-4678-8cd4-70acd5d5efba",
 		"name": "order-management",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -286,31 +286,6 @@
 								"restaurants",
 								"1",
 								"rate"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "unknow restaurant",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
-						"url": {
-							"raw": "{{api.url}}/v1/order-management/restaurants/20/meals",
-							"host": [
-								"{{api.url}}"
-							],
-							"path": [
-								"v1",
-								"order-management",
-								"restaurants",
-								"20",
-								"meals"
 							]
 						}
 					},

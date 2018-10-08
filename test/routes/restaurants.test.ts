@@ -207,15 +207,6 @@ describe('/restaurants', () => {
                 }],
             });
         });
-
-        it('returns 404 if restaurant is not found', async () => {
-            when(mockMealRepository.find(anything())).thenResolve([]);
-
-            const result = await request(mockedApp).get('/v1/order-management/restaurants/1/meals');
-
-            expect(result.status).toBe(404);
-            expect(result.body.message).toBe('restaurant not found');
-        });
     });
 
     describe('POST /restaurants/:id/meals', () => {
