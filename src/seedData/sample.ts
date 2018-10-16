@@ -42,7 +42,7 @@ loadTypeOrmOptions()
         // tslint:disable-next-line:max-line-length
         const descriptionLorem = 'Duis eu sapien sodales, gravida sapien ac, maximus orci. Curabitur sollicitudin turpis diam, nec tincidunt nulla elementum auctor. In a arcu sed dolor porttitor egestas in placerat tortor. Nunc vehicula ipsum in lorem posuere vulputate. Morbi turpis duis';
 
-        const ratingGenerator = () => Math.floor(Math.random() * 10) + 1;
+        const ratingGenerator = () => Math.floor(Math.random() * 10) + 1; // between 1 - 10 inclusive
 
         // seed users
         const customer1 = new Customer();
@@ -90,7 +90,7 @@ loadTypeOrmOptions()
             restaurant.name = restaurantName;
             restaurant.owner = owner1;
             const meals = [];
-            for (let j = 0; j <= Math.floor(Math.random() * 5) + 5; j++) {
+            for (let j = 0; j <= Math.floor(Math.random() * 5) + 5; j++) { // between 5 - 10 meals
                 const meal = new Meal();
                 meal.name = `Meal - ${i} - ${j}`;
                 meal.description = descriptionLorem.substr(0, Math.floor(Math.random() * 155) + 100);
@@ -99,12 +99,21 @@ loadTypeOrmOptions()
             }
             restaurant.meals = meals;
             await getRepository(Restaurant).save(restaurant);
-            const savedRestaurant = await getRepository(Restaurant).findOne({name: restaurantName});
-            const rating = new Rating();
-            rating.customer = customer1;
-            rating.score = ratingGenerator();
-            rating.restaurant = savedRestaurant!;
-            await getRepository(Rating).save(rating);
+            const savedRestaurant = await getRepository(Restaurant).findOne({ name: restaurantName });
+            const maxNumOfRatings = Math.floor(Math.random() * 5) + 5; // 5 - 10 ratings inclusive
+            for (let numOfRatings = 0; numOfRatings < maxNumOfRatings; numOfRatings++) {
+                const rating1 = new Rating();
+                rating1.customer = customer1;
+                rating1.score = ratingGenerator();
+                rating1.restaurant = savedRestaurant!;
+                await getRepository(Rating).save(rating1);
+
+                const rating2 = new Rating();
+                rating2.customer = customer2;
+                rating2.score = ratingGenerator();
+                rating2.restaurant = savedRestaurant!;
+                await getRepository(Rating).save(rating2);
+            }
         }
     })
     // tslint:disable-next-line:no-console

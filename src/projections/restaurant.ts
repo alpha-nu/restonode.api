@@ -7,4 +7,11 @@ export const restaurantProjection = (r: Restaurant) => ({
     address: r.address.normalized,
 });
 
-export const restaurantsProjection = (rs: Restaurant[]) => rs.map(_ => restaurantProjection(_));
+export const rowRestaurantProjection = (r: any) => ({
+    name: r.restaurant_name,
+    score: parseFloat(r.avg_rating),
+    id: r.restaurant_id,
+    address: r.address_normalized,
+});
+
+export const restaurantsProjection = (rs: Restaurant[]) => rs.map(_ => rowRestaurantProjection(_));

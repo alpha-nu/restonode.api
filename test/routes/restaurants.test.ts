@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { when, anything, deepEqual, verify, anyOfClass, mock } from 'ts-mockito';
+import { when, anything, deepEqual, verify, mock } from 'ts-mockito';
 import { Restaurant } from '../../src/entity/restaurant';
 import { Rating } from '../../src/entity/rating';
 import { Customer } from '../../src/entity/customer';
@@ -19,26 +19,48 @@ describe('/restaurants', () => {
     afterEach(() => afterEachTest());
 
     describe('GET /restaurants', () => {
-        it('it returns a list of restaurants', async () => {
-            const address = new Address();
-            address.normalized = 'address';
-            const restaurant = new Restaurant();
-            restaurant.name = 'Fancy Eats';
-            restaurant.id = 1;
-            restaurant.address = address;
-            const rating = new Rating();
-            rating.score = 100;
-            const anotherRating = new Rating();
-            anotherRating.score = 50;
-            restaurant.ratings = [rating, anotherRating];
+        it('returns a list of restaurants', async () => {
 
-            when(mockRestaurantRepository.find(
-                deepEqual({ relations: ['ratings', 'address'] }))
-            ).thenResolve([restaurant]);
+            const mockInnerJoinAndSelect = jest.fn().mockReturnThis();
+            const mockLeftJoinAndSelect = jest.fn().mockReturnThis();
+            const mockAddSelect = jest.fn().mockReturnThis();
+            const mockGroupBy = jest.fn().mockReturnThis();
+            const mockHaving = jest.fn().mockReturnThis();
+            const mockOrderBy = jest.fn().mockReturnThis();
+            when(mockRestaurantRepository.createQueryBuilder('restaurant'))
+                .thenReturn({
+                    innerJoinAndSelect: mockInnerJoinAndSelect,
+                    leftJoinAndSelect: mockLeftJoinAndSelect,
+                    addSelect: mockAddSelect,
+                    groupBy: mockGroupBy,
+                    having: mockHaving,
+                    orderBy: mockOrderBy,
+                    getRawMany: jest.fn().mockResolvedValue([{
+                        restaurant_id: 1,
+                        restaurant_name: 'Fancy Eats',
+                        address_normalized: 'address',
+                        avg_rating: '8.0000',
+                    }]),
+                } as any);
 
-            const result = await request(mockedApp).get('/v1/order-management/restaurants');
+            const result = await request(mockedApp).get('/v1/order-management/restaurants').query({ rating: '5' });
 
-            expect(result.body.restaurants).toEqual([{ score: 75, name: 'Fancy Eats', id: 1, address: 'address' }]);
+            expect(result.body.restaurants).toEqual([{ score: 8, name: 'Fancy Eats', id: 1, address: 'address' }]);
+            expect(mockInnerJoinAndSelect).toHaveBeenCalledWith('restaurant.address', 'address');
+            expect(mockLeftJoinAndSelect).toHaveBeenCalledWith('restaurant.ratings', 'rating');
+            expect(mockAddSelect).toHaveBeenCalledWith('AVG(rating.score)', 'avg_rating');
+            expect(mockGroupBy).toHaveBeenCalledWith('restaurant.id');
+            expect(mockHaving).toHaveBeenCalledWith('avg_rating >= :rating', { rating: '5' });
+            expect(mockOrderBy).toHaveBeenCalledWith('avg_rating', 'DESC');
+        });
+
+        it('returns 400 if rating filter value is NaN', async () => {
+            const result = await request(mockedApp)
+                .get('/v1/order-management/restaurants')
+                .query({ rating: 'moo' });
+
+            expect(result.status).toBe(400);
+            expect(result.body.message).toBe('rating filter must be an integer');
         });
     });
 

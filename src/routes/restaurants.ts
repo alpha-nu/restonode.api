@@ -18,8 +18,24 @@ export default (
 ) => {
 
     const getRestaurantsHandler = async (req: Request, res: Response) => {
-        const result = await restaurantRepository.find({ relations: ['ratings', 'address'] });
-        res.json({ restaurants: restaurantsProjection(result) });
+        if (req.query.rating && isNaN(parseInt(req.query.rating, 10))) {
+            throw new RestoNodeError(400, 'rating filter must be an integer');
+        }
+
+        let result = restaurantRepository
+            .createQueryBuilder('restaurant')
+            .innerJoinAndSelect('restaurant.address', 'address')
+            .leftJoinAndSelect('restaurant.ratings', 'rating')
+            .addSelect('AVG(rating.score)', 'avg_rating')
+            .groupBy('restaurant.id');
+
+        if (req.query.rating) {
+            result = result.having('avg_rating >= :rating', { rating: req.query.rating });
+        }
+
+        result = result.orderBy('avg_rating', 'DESC');
+
+        res.json({ restaurants: restaurantsProjection(await result.getRawMany()) });
     };
 
     const createRestaurantHandler = async (req: Request, res: Response) => {
@@ -99,7 +115,7 @@ export default (
     };
 
     return Router()
-        .get('/', getRestaurantsHandler)
+        .get('/', safeHandler(getRestaurantsHandler))
         .post('/', safeHandler(createRestaurantHandler))
         .get('/:id/meals', safeHandler(getMealsHandler))
         .post('/:id/meals', safeHandler(createMealHandler))
