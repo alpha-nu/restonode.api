@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "fcfd18fa-58e7-4ada-99eb-a8b3ebecb214",
+		"_postman_id": "6345b1f0-25f5-4474-a376-e9c032d4c991",
 		"name": "order-management",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -404,6 +404,35 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Invalid rating filter param",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{api.url}}/v1/order-management/restaurants?rating=INVALID",
+							"host": [
+								"{{api.url}}"
+							],
+							"path": [
+								"v1",
+								"order-management",
+								"restaurants"
+							],
+							"query": [
+								{
+									"key": "rating",
+									"value": "INVALID"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -425,6 +454,35 @@
 						"v1",
 						"order-management",
 						"restaurants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All restaurants of atleast X rating",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{api.url}}/v1/order-management/restaurants?rating=5",
+					"host": [
+						"{{api.url}}"
+					],
+					"path": [
+						"v1",
+						"order-management",
+						"restaurants"
+					],
+					"query": [
+						{
+							"key": "rating",
+							"value": "5"
+						}
 					]
 				}
 			},
