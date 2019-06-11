@@ -1,0 +1,27 @@
+version: '3.7'
+
+services: 
+  db:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports: 
+      - 3306:3306
+    expose: 
+      - 3306
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 'true'
+      MYSQL_DATABASE: ${DATABASE}
+      MYSQL_USER: ${DB_USER_NAME} 
+      MYSQL_PASSWORD: ${DB_USER_PASSWORD}
+  
+  messaging:
+    image: rabbitmq:3.7.15-management
+    hostname: fluffy-bunny
+    container_name: rabbitmq
+    ports: 
+      - 5672:5672
+      - 127.0.0.1:15672:15672
+    
+   
+

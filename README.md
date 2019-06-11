@@ -28,7 +28,7 @@ However the script does not create the actual database base itself, i.e. it is a
 CREATE DATABASE `restonode`
 ```
 
-The ORM implementation here uses mysql. There is a known issue with nodejs driver that may give errors when the driver attempts to login to the database. This is a know workaround, simply change the login type of the user with privileges to ferform database operations on the `restonode` database.
+The ORM implementation here uses mysql. There is a known issue with nodejs driver that may give errors when the driver attempts to login to the database. This is a know workaround, simply change the login type of the user with privileges to perform database operations on the `restonode` database.
 
 ```SQL
 CREATE USER '<USER_NAME>' IDENTIFIED WITH mysql_native_password BY '<PASSWORD>';
@@ -56,7 +56,7 @@ which will also synchronize the ORM model with the database each time the expres
 
 To start the service on the default node port:
 ```SHELL
-yarn run
+yarn start
 ```
 
 **For convenience, a postman collection is included in the source, the json export `.\order-management.postman_collection.json` contains sample requests for all endpoints as well as user journeys spanning multiple requests. HTTP errors and entity validations have a dedicated folder in the collection as well.**
