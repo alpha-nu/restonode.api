@@ -24,7 +24,7 @@
     "morgan": "~1.9.0",
     "mysql": "^2.16.0",
     "reflect-metadata": "^0.1.12",
-    "typeorm": "^0.2.7"
+    "typeorm": "^0.2.25"
   },
   "devDependencies": {
     "@types/amqplib": "^0.5.8",
