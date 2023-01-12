@@ -16,7 +16,7 @@
   "dependencies": {
     "amqplib": "^0.5.2",
     "axios": "^0.21.1",
-    "class-validator": "^0.9.1",
+    "class-validator": "^0.14.0",
     "cors": "^2.8.4",
     "debug": "~2.6.9",
     "dotenv": "^6.0.0",
